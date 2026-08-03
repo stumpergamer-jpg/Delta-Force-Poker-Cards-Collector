@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Cartes Asara - Delta Force</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+
+            --owned-color: #15803d;
+            --owned-border: #22c55e;
+            --missing-color: #7f1d1d;
+            --missing-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            margin: 0;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+            font-size: 0.95rem;
+        }
+
+        /* Langue Select */
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--panel-bg);
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .lang-selector label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .lang-selector select {
+            background-color: #0f172a;
+            color: var(--text-main);
+            border: 1px solid #475569;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-selector select:hover {
+            border-color: var(--accent-blue);
+        }
+
+        /* --- DASHBOARD --- */
+        .dashboard {
+            background-color: var(--panel-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.green {
+            background-color: var(--owned-border);
+        }
+
+        .dot.red {
+            background-color: var(--missing-border);
+        }
+
+        .progress-bar-bg {
+            background-color: #0f172a;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            width: 0%;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-filter {
+            background-color: #0f172a;
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-filter:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-filter.active {
+            background-color: var(--accent-blue);
+            color: #0b0f19;
+            border-color: var(--accent-blue);
+        }
+
+        .btn-reset {
+            margin-left: auto;
+            background-color: #334155;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            background-color: #ef4444;
+            border-color: #f87171;
+            color: #ffffff;
+        }
+
+        /* --- GRILLE DE CARTES --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .card-item {
+            background-color: var(--missing-color);
+            border: 2px solid var(--missing-border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-item.owned {
+            background-color: var(--owned-color);
+            border-color: var(--owned-border);
+        }
+
+        .card-img-wrapper {
+            width: 100px;
+            height: 140px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            width: 100%;
+        }
+
+        .card-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-container">
+        <div class="header-titles">
+            <h1 class="header-title" id="txt-title">Cartes Asara</h1>
+            <div class="subtitle" id="txt-subtitle">Delta Force — Suivi de Collection</div>
+        </div>
+        <div class="lang-selector">
+            <label for="langSelect" id="txt-lang-label">Langue :</label>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- Barre de complétion -->
+        <div class="progress-section">
+            <div class="progress-stats">
+                <span class="stat-badge"><span class="dot green"></span> <span id="txt-owned-lbl">Possédées</span> :
+                    <strong id="ownedCount">0</strong></span>
+                <span class="stat-badge"><span class="dot red"></span> <span id="txt-missing-lbl">Manquantes</span> :
+                    <strong id="missingCount">0</strong></span>
+                <span><span id="txt-total-lbl">Total</span> : <strong id="totalCount">55</strong></span>
+                <span style="color: var(--accent-blue); font-size: 1.1rem;" id="percentageText">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Filtres par Enseigne -->
+        <div class="filter-group">
+            <div class="filter-label" id="txt-filter-type">Filtrer par couleur / type :</div>
+            <div class="filter-buttons">
+                <button class="btn-filter active" onclick="setSuitFilter('all', this)" id="btn-suit-all">Toutes</button>
+                <button class="btn-filter" onclick="setSuitFilter('Pique', this)" id="btn-suit-spade">♠ Pique</button>
+                <button class="btn-filter" onclick="setSuitFilter('Coeur', this)" id="btn-suit-heart">♥ Cœur</button>
+                <button class="btn-filter" onclick="setSuitFilter('Trèfle', this)" id="btn-suit-club">♣ Trèfle</button>
+                <button class="btn-filter" onclick="setSuitFilter('Carreau', this)" id="btn-suit-diamond">♦
+                    Carreau</button>
+                <button class="btn-filter" onclick="setSuitFilter('Special', this)" id="btn-suit-special">★
+                    Spéciales</button>
+            </div>
+        </div>
+
+        <!-- Filtres par Statut & Reset -->
+        <div class="filter-group" style="flex-direction: row; align-items: center; flex-wrap: wrap;">
+            <div>
+                <div class="filter-label" style="margin-bottom: 8px;" id="txt-filter-status">Affichage :</div>
+                <div class="filter-buttons">
+                    <button class="btn-filter active" onclick="setStatusFilter('all', this)"
+                        id="btn-status-all">Toutes</button>
+                    <button class="btn-filter" onclick="setStatusFilter('owned', this)"
+                        id="btn-status-owned">Possédées</button>
+                    <button class="btn-filter" onclick="setStatusFilter('missing', this)"
+                        id="btn-status-missing">Manquantes</button>
+                </div>
+            </div>
+            <button class="btn-reset" onclick="resetCollection()" id="btn-reset">Réinitialiser la collection</button>
+        </div>
+    </div>
+
+    <!-- Grille des cartes -->
+    <div class="grid" id="cardsGrid"></div>
+
+    <script>
+        const folder = "./Cards/";
+
+        // TRADUCTIONS DE L'INTERFACE
+        const i18n = {
+            fr: {
+                title: "Cartes Asara",
+                subtitle: "Delta Force — Suivi de Collection",
+                langLabel: "Langue :",
+                owned: "Possédées",
+                missing: "Manquantes",
+                total: "Total",
+                filterType: "Filtrer par couleur / type :",
+                filterStatus: "Affichage :",
+                all: "Toutes",
+                spade: "♠ Pique",
+                heart: "♥ Cœur",
+                club: "♣ Trèfle",
+                diamond: "♦ Carreau",
+                special: "★ Spéciales",
+                statusOwned: "Possédées",
+                statusMissing: "Manquantes",
+                reset: "Réinitialiser la collection",
+                resetConfirm: "Voulez-vous vraiment réinitialiser toute votre collection ?",
+                cardBox: "Boîte de cartes",
+                bigJoker: "Grand Joker",
+                smallJoker: "Petit Joker",
+                suits: { Pique: "Pique", Coeur: "Cœur", Trèfle: "Trèfle", Carreau: "Carreau" },
+                values: { As: "As", Valet: "Valet", Dame: "Dame", Roi: "Roi" }
+            },
+            en: {
+                title: "Asara Cards",
+                subtitle: "Delta Force — Collection Tracker",
+                langLabel: "Language:",
+                owned: "Collected",
+                missing: "Missing",
+                total: "Total",
+                filterType: "Filter by suit / type:",
+                filterStatus: "Display:",
+                all: "All",
+                spade: "♠ Spades",
+                heart: "♥ Hearts",
+                club: "♣ Clubs",
+                diamond: "♦ Diamonds",
+                special: "★ Specials",
+                statusOwned: "Collected",
+                statusMissing: "Missing",
+                reset: "Reset Collection",
+                resetConfirm: "Are you sure you want to reset your entire collection?",
+                cardBox: "Card Box",
+                bigJoker: "Big Joker",
+                smallJoker: "Small Joker",
+                suits: { Pique: "Spades", Coeur: "Hearts", Trèfle: "Clubs", Carreau: "Diamonds" },
+                values: { As: "Ace", Valet: "Jack", Dame: "Queen", Roi: "King" }
+            },
+            zh: {
+                title: "阿萨拉扑克牌",
+                subtitle: "三角洲行动 — 收集跟踪器",
+                langLabel: "语言:",
+                owned: "已收集",
+                missing: "未收集",
+                total: "总计",
+                filterType: "按花色/类型筛选:",
+                filterStatus: "显示:",
+                all: "全部",
+                spade: "♠ 黑桃",
+                heart: "♥ 红桃",
+                club: "♣ 梅花",
+                diamond: "♦ 方块",
+                special: "★ 特殊",
+                statusOwned: "已收集",
+                statusMissing: "未收集",
+                reset: "重置收集进度",
+                resetConfirm: "您确定要重置所有收集进度吗？",
+                cardBox: "卡盒",
+                bigJoker: "大王",
+                smallJoker: "小王",
+                suits: { Pique: "黑桃", Coeur: "红桃", Trèfle: "梅花", Carreau: "方块" },
+                values: { As: "A", Valet: "J", Dame: "Q", Roi: "K" }
+            },
+            ru: {
+                title: "Карты Асара",
+                subtitle: "Delta Force — Отслеживание коллекции",
+                langLabel: "Язык:",
+                owned: "Собрано",
+                missing: "Отсутствует",
+                total: "Всего",
+                filterType: "Фильтр по масти / типу:",
+                filterStatus: "Отображение:",
+                all: "Все",
+                spade: "♠ Пики",
+                heart: "♥ Черви",
+                club: "♣ Трефы",
+                diamond: "♦ Бубны",
+                special: "★ Особые",
+                statusOwned: "Собрано",
+                statusMissing: "Отсутствует",
+                reset: "Сбросить коллекцию",
+                resetConfirm: "Вы уверены, что хотите сбросить всю коллекцию?",
+                cardBox: "Коробка карт",
+                bigJoker: "Большой Джокер",
+                smallJoker: "Малый Джокер",
+                suits: { Pique: "Пики", Coeur: "Черви", Trèfle: "Трефы", Carreau: "Бубны" },
+                values: { As: "Туз", Valet: "Валет", Dame: "Дама", Roi: "Король" }
+            }
+        };
+
+        // Langue courante
+        let currentLang = localStorage.getItem('df_asara_lang') || 'fr';
+
+        // Structure de base des cartes (clés de fichier inchangées pour charger depuis le dossier ./Cards/)
+        const specialCards = [
+            { id: "Boite de cartes", key: "cardBox", file: "Boite de cartes", suit: "Special" },
+            { id: "Grand Joker", key: "bigJoker", file: "Grand Joker", suit: "Special" },
+            { id: "Petit Joker", key: "smallJoker", file: "Petit Joker", suit: "Special" }
+        ];
+
+        const suits = ["Pique", "Coeur", "Trèfle", "Carreau"];
+        const values = ["As", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Valet", "Dame", "Roi"];
+
+        const cardsBase = [...specialCards];
+        suits.forEach(suit => {
+            values.forEach(val => {
+                cardsBase.push({
+                    id: `${val} ${suit}`,
+                    val: val,
+                    suit: suit,
+                    file: `${val} ${suit}`
+                });
+            });
+        });
+
+        // États
+        let activeSuitFilter = 'all';
+        let activeStatusFilter = 'all';
+        let ownedCards = JSON.parse(localStorage.getItem('df_asara_cards_local')) || {};
+
+        function getCardDisplayName(card) {
+            const lang = i18n[currentLang];
+            if (card.suit === 'Special') {
+                return lang[card.key];
+            }
+            const valName = lang.values[card.val] || card.val;
+            const suitName = lang.suits[card.suit];
+
+            if (currentLang === 'en' || currentLang === 'zh') {
+                return `${valName} ${suitName}`;
+            }
+            return `${valName} ${suitName}`;
+        }
+
+        function applyLanguage() {
+            const t = i18n[currentLang];
+            document.getElementById('langSelect').value = currentLang;
+
+            document.getElementById('txt-title').textContent = t.title;
+            document.getElementById('txt-subtitle').textContent = t.subtitle;
+            document.getElementById('txt-lang-label').textContent = t.langLabel;
+
+            document.getElementById('txt-owned-lbl').textContent = t.owned;
+            document.getElementById('txt-missing-lbl').textContent = t.missing;
+            document.getElementById('txt-total-lbl').textContent = t.total;
+
+            document.getElementById('txt-filter-type').textContent = t.filterType;
+            document.getElementById('btn-suit-all').textContent = t.all;
+            document.getElementById('btn-suit-spade').textContent = t.spade;
+            document.getElementById('btn-suit-heart').textContent = t.heart;
+            document.getElementById('btn-suit-club').textContent = t.club;
+            document.getElementById('btn-suit-diamond').textContent = t.diamond;
+            document.getElementById('btn-suit-special').textContent = t.special;
+
+            document.getElementById('txt-filter-status').textContent = t.filterStatus;
+            document.getElementById('btn-status-all').textContent = t.all;
+            document.getElementById('btn-status-owned').textContent = t.statusOwned;
+            document.getElementById('btn-status-missing').textContent = t.statusMissing;
+
+            document.getElementById('btn-reset').textContent = t.reset;
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('df_asara_lang', lang);
+            applyLanguage();
+            renderGrid();
+        }
+
+        function updateStats() {
+            const total = cardsBase.length;
+            let owned = 0;
+
+            cardsBase.forEach(card => {
+                if (ownedCards[card.id]) owned++;
+            });
+
+            const missing = total - owned;
+            const percentage = Math.round((owned / total) * 100) || 0;
+
+            document.getElementById('ownedCount').textContent = owned;
+            document.getElementById('missingCount').textContent = missing;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('percentageText').textContent = `${percentage}%`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('cardsGrid');
+            const t = i18n[currentLang];
+            grid.innerHTML = '';
+
+            cardsBase.forEach((card) => {
+                const isOwned = !!ownedCards[card.id];
+
+                if (activeSuitFilter !== 'all' && card.suit !== activeSuitFilter) return;
+                if (activeStatusFilter === 'owned' && !isOwned) return;
+                if (activeStatusFilter === 'missing' && isOwned) return;
+
+                const displayName = getCardDisplayName(card);
+                const cardEl = document.createElement('div');
+                cardEl.className = `card-item ${isOwned ? 'owned' : ''}`;
+                cardEl.onclick = () => toggleCard(card.id);
+
+                const imgPath = `${folder}${card.file}`;
+                cardEl.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img class="card-img" 
+                             src="${imgPath}.webp" 
+                             onerror="if(this.src.endsWith('.webp')){this.src='${imgPath}.png';}else if(this.src.endsWith('.png')){this.src='${imgPath}.jpg';}" 
+                             alt="${displayName}" 
+                             loading="lazy">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-name" title="${displayName}">${displayName}</div>
+                        <div class="card-status">${isOwned ? t.statusOwned : t.statusMissing}</div>
+                    </div>
+                `;
+
+                grid.appendChild(cardEl);
+            });
+
+            updateStats();
+        }
+
+        function toggleCard(cardId) {
+            ownedCards[cardId] = !ownedCards[cardId];
+            localStorage.setItem('df_asara_cards_local', JSON.stringify(ownedCards));
+            renderGrid();
+        }
+
+        function setSuitFilter(suit, btn) {
+            activeSuitFilter = suit;
+            btn.parentElement.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGrid();
+        }
+
+        function setStatusFilter(status, btn) {
+            activeStatusFilter = status;
+            btn.parentElement.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGrid();
+        }
+
+        function resetCollection() {
+            const t = i18n[currentLang];
+            if (confirm(t.resetConfirm)) {
+                ownedCards = {};
+                localStorage.removeItem('df_asara_cards_local');
+                renderGrid();
+            }
+        }
+
+        // Init
+        applyLanguage();
+        renderGrid();
+    </script>
+</body>
+
+</html>
