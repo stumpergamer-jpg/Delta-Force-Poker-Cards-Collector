@@ -1,4 +1,4 @@
-Delta Force — Asharah Card Collection Tracker
+Delta Force — Ahsarah Card Collection Tracker
 A lightweight, standalone, and feature-complete web tool designed to easily track your progress through the 55 Asara cards in Delta Force.
 
 ✨ Key Features
