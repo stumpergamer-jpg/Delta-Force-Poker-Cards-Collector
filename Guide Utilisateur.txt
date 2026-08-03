@@ -1,4 +1,4 @@
-Delta Force — Tracker de Collection de Cartes Asara
+Delta Force — Tracker de Collection de Cartes Asharah
 Un outil web léger, autonome et complet conçu pour suivre facilement votre progression dans la collection des 55 cartes Asara sur Delta Force.
 
 ✨ Fonctionnalités clés
