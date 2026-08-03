@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection Cartes Asharah - Delta Force</title>
+    <title>Collection Cartes Ahsarah - Delta Force</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -357,7 +357,7 @@
 
     <div class="header-container">
         <div class="header-titles">
-            <h1 class="header-title" id="txt-title">Cartes Asharah</h1>
+            <h1 class="header-title" id="txt-title">Cartes Ahsarah</h1>
             <div class="subtitle" id="txt-subtitle">Delta Force — Suivi de Collection</div>
         </div>
 
@@ -442,7 +442,7 @@
         // TRADUCTIONS DE L'INTERFACE
         const i18n = {
             fr: {
-                title: "Cartes Asharah",
+                title: "Cartes Ahsarah",
                 subtitle: "Delta Force — Suivi de Collection",
                 langLabel: "Langue :",
                 usersLbl: "Visites :",
@@ -469,7 +469,7 @@
                 values: { As: "As", Valet: "Valet", Dame: "Dame", Roi: "Roi" }
             },
             en: {
-                title: "Asharah Cards",
+                title: "Ahsarah Cards",
                 subtitle: "Delta Force — Collection Tracker",
                 langLabel: "Language:",
                 usersLbl: "Visits:",
@@ -552,7 +552,7 @@
         };
 
         // Langue courante
-        let currentLang = localStorage.getItem('df_Asharah_lang') || 'fr';
+        let currentLang = localStorage.getItem('df_Ahsarah_lang') || 'fr';
 
         // Cartes Spéciales
         const specialCards = [
@@ -579,7 +579,7 @@
         // États
         let activeSuitFilter = 'all';
         let activeStatusFilter = 'all';
-        let ownedCards = JSON.parse(localStorage.getItem('df_Asharah_cards_local')) || {};
+        let ownedCards = JSON.parse(localStorage.getItem('df_Ahsarah_cards_local')) || {};
 
         function getCardDisplayName(card) {
             const lang = i18n[currentLang];
@@ -624,7 +624,7 @@
 
         function changeLanguage(lang) {
             currentLang = lang;
-            localStorage.setItem('df_Asharah_lang', lang);
+            localStorage.setItem('df_Ahsarah_lang', lang);
             applyLanguage();
             renderGrid();
         }
@@ -687,7 +687,7 @@
 
         function toggleCard(cardId) {
             ownedCards[cardId] = !ownedCards[cardId];
-            localStorage.setItem('df_Asharah_cards_local', JSON.stringify(ownedCards));
+            localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
             renderGrid();
         }
 
@@ -709,14 +709,14 @@
             const t = i18n[currentLang];
             if (confirm(t.resetConfirm)) {
                 ownedCards = {};
-                localStorage.removeItem('df_Asharah_cards_local');
+                localStorage.removeItem('df_Ahsarah_cards_local');
                 renderGrid();
             }
         }
 
         // Compteur global de visites (CountAPI)
         function fetchUserCount() {
-            const namespace = "deltaforce-Asharah-tracker-global";
+            const namespace = "deltaforce-Ahsarah-tracker-global";
             const key = "visits";
 
             fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
