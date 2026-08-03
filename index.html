@@ -714,20 +714,35 @@
             }
         }
 
-        // Compteur global de visites (CountAPI)
-        function fetchUserCount() {
-            const namespace = "deltaforce-Ahsarah-tracker-global";
-            const key = "visits";
+       // Compteur d'utilisateurs uniques
+function fetchUserCount() {
+    const namespace = "deltaforce-asara-tracker-unique-users";
+    const key = "users_count";
+    const hasVisited = localStorage.getItem('df_asara_user_registered');
 
-            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('userCount').textContent = data.value.toLocaleString();
-                })
-                .catch(err => {
-                    document.getElementById('userCount').textContent = "1";
-                });
-        }
+    if (!hasVisited) {
+        // Premier passage de cet utilisateur : on incrémente le compteur global (+1)
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+            .then(response => response.json())
+            .then(data => {
+                // Marquer cet utilisateur comme enregistré dans son navigateur
+                localStorage.setItem('df_asara_user_registered', 'true');
+                document.getElementById('userCount').textContent = data.count.toLocaleString();
+            })
+            .catch(err => {
+                document.getElementById('userCount').textContent = "1";
+            });
+    } else {
+        // L'utilisateur est déjà repéré : on récupère juste la valeur actuelle sans incrémenter
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('userCount').textContent = data.count.toLocaleString();
+            })
+            .catch(err => {
+                document.getElementById('userCount').textContent = "1";
+            });
+    }
 
         // Init
         applyLanguage();
