@@ -362,9 +362,9 @@
         </div>
 
         <div class="header-actions">
-            <!-- Compteur d'utilisateurs uniques -->
+            <!-- Compteur d'utilisateurs -->
             <div class="user-counter">
-                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">...</strong>
+                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">1</strong>
             </div>
 
             <!-- Bouton Don PayPal -->
@@ -551,10 +551,8 @@
             }
         };
 
-        // Langue courante
         let currentLang = localStorage.getItem('df_Ahsarah_lang') || 'fr';
 
-        // Cartes Spéciales
         const specialCards = [
             { id: "Boite de cartes", key: "cardBox", file: "Boite de cartes", suit: "Special" },
             { id: "Grand Joker", key: "bigJoker", file: "Grand Joker", suit: "Special" },
@@ -576,7 +574,6 @@
             });
         });
 
-        // États
         let activeSuitFilter = 'all';
         let activeStatusFilter = 'all';
         let ownedCards = JSON.parse(localStorage.getItem('df_Ahsarah_cards_local')) || {};
@@ -714,37 +711,37 @@
             }
         }
 
-        // Compteur d'utilisateurs uniques
-        function fetchUserCount() {
+        // Gestion asynchrone sécurisée du compteur
+        async function fetchUserCount() {
             const namespace = "deltaforce-asara-tracker-unique-users";
             const key = "users_count";
             const hasVisited = localStorage.getItem('df_asara_user_registered');
 
-            if (!hasVisited) {
-                // Premier passage de cet utilisateur : on incrémente le compteur global (+1)
-                fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-                    .then(response => response.json())
-                    .then(data => {
-                        localStorage.setItem('df_asara_user_registered', 'true');
+            const endpoint = !hasVisited
+                ? `https://api.counterapi.dev/v1/${namespace}/${key}/up`
+                : `https://api.counterapi.dev/v1/${namespace}/${key}`;
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000); // Annule si l'API met +3s à répondre
+
+                const response = await fetch(endpoint, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.count) {
+                        if (!hasVisited) localStorage.setItem('df_asara_user_registered', 'true');
                         document.getElementById('userCount').textContent = data.count.toLocaleString();
-                    })
-                    .catch(err => {
-                        document.getElementById('userCount').textContent = "1";
-                    });
-            } else {
-                // L'utilisateur est déjà repéré : on récupère juste la valeur actuelle sans incrémenter
-                fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('userCount').textContent = data.count.toLocaleString();
-                    })
-                    .catch(err => {
-                        document.getElementById('userCount').textContent = "1";
-                    });
+                    }
+                }
+            } catch (err) {
+                // En cas d'erreur réseau/CORS ou timeout, l'interface reste parfaitement intacte
+                console.log("Compteur indisponible temporairement.");
             }
         }
 
-        // Init
+        // Initialisation de la page
         applyLanguage();
         renderGrid();
         fetchUserCount();
