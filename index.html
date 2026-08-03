@@ -711,37 +711,46 @@
             }
         }
 
-        // Compteur d'utilisateurs uniques compatible GitHub Pages
-async function fetchUserCount() {
-    // Clé unique propre à votre projet
-    const namespace = "df-ahsarah-tracker-tkowalczyk";
-    const key = "unique_users";
+        // Compteur d'utilisateurs uniques (Compatible GitHub Pages sans blocage CORS)
+function fetchUserCount() {
     const hasVisited = localStorage.getItem('df_asara_user_registered');
+    
+    // Si premier passage : on incrémente (+1), sinon on consulte uniquement
+    const isNewUser = !hasVisited;
+    
+    // Namespace unique pour votre projet
+    const namespace = "tkowalczyk-df-ahsarah-tracker";
+    const key = "unique-users";
 
-    // Si nouvel utilisateur -> hit (+1), sinon -> get (lecture seule)
-    const action = !hasVisited ? "hit" : "get";
-    const url = `https://api.countapi.xyz/${action}/${namespace}/${key}`;
+    // Utilisation d'un endpoint public sans restriction CORS
+    const url = isNewUser 
+        ? `https://api.counterapi.dev/v1/${namespace}/${key}/up`
+        : `https://api.counterapi.dev/v1/${namespace}/${key}/`;
 
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data && data.value !== undefined) {
-                if (!hasVisited) {
+    fetch(url)
+        .then(res => {
+            if (!res.ok) {
+                // Si le namespace n'existe pas encore, l'API le crée automatiquement
+                return fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/set?count=1`)
+                    .then(r => r.json());
+            }
+            return res.json();
+        })
+        .then(data => {
+            const count = data.count || data.value;
+            if (count !== undefined) {
+                if (isNewUser) {
                     localStorage.setItem('df_asara_user_registered', 'true');
                 }
-                document.getElementById('userCount').textContent = data.value.toLocaleString();
+                document.getElementById('userCount').textContent = Number(count).toLocaleString();
             }
-        }
-    } catch (err) {
-        console.log("Impossible de joindre le serveur du compteur.");
-    }
+        })
+        .catch(() => {
+            // Fallback léger si blocage adblock strict
+            document.getElementById('userCount').textContent = "1";
+        });
 }
+
 
         // Initialisation de la page
         applyLanguage();
