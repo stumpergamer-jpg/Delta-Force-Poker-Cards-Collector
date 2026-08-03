@@ -67,7 +67,50 @@
             font-size: 0.95rem;
         }
 
-        /* Langue Select */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .user-counter {
+            background-color: var(--panel-bg);
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-counter strong {
+            color: var(--accent-blue);
+        }
+
+        .btn-paypal {
+            background-color: #0070ba;
+            color: #ffffff;
+            border: 1px solid #005ea6;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-paypal:hover {
+            background-color: #005ea6;
+            transform: translateY(-1px);
+        }
+
         .lang-selector {
             display: flex;
             align-items: center;
@@ -317,14 +360,28 @@
             <h1 class="header-title" id="txt-title">Cartes Asara</h1>
             <div class="subtitle" id="txt-subtitle">Delta Force — Suivi de Collection</div>
         </div>
-        <div class="lang-selector">
-            <label for="langSelect" id="txt-lang-label">Langue :</label>
-            <select id="langSelect" onchange="changeLanguage(this.value)">
-                <option value="fr">Français</option>
-                <option value="en">English</option>
-                <option value="zh">中文</option>
-                <option value="ru">Русский</option>
-            </select>
+
+        <div class="header-actions">
+            <!-- Compteur de utilisateurs / visites -->
+            <div class="user-counter">
+                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">...</strong>
+            </div>
+
+            <!-- Bouton Don PayPal -->
+            <a href="https://paypal.me/TKowalczyk" target="_blank" class="btn-paypal" id="btn-paypal">
+                ☕ <span id="txt-paypal-lbl">Faire un don</span>
+            </a>
+
+            <!-- Sélecteur de langue -->
+            <div class="lang-selector">
+                <label for="langSelect" id="txt-lang-label">Langue :</label>
+                <select id="langSelect" onchange="changeLanguage(this.value)">
+                    <option value="fr">Français</option>
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                    <option value="ru">Русский</option>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -388,6 +445,8 @@
                 title: "Cartes Asara",
                 subtitle: "Delta Force — Suivi de Collection",
                 langLabel: "Langue :",
+                usersLbl: "Visites :",
+                paypalLbl: "Faire un don",
                 owned: "Possédées",
                 missing: "Manquantes",
                 total: "Total",
@@ -413,6 +472,8 @@
                 title: "Asara Cards",
                 subtitle: "Delta Force — Collection Tracker",
                 langLabel: "Language:",
+                usersLbl: "Visits:",
+                paypalLbl: "Donate",
                 owned: "Collected",
                 missing: "Missing",
                 total: "Total",
@@ -438,6 +499,8 @@
                 title: "阿萨拉扑克牌",
                 subtitle: "三角洲行动 — 收集跟踪器",
                 langLabel: "语言:",
+                usersLbl: "访问量:",
+                paypalLbl: "捐赠支持",
                 owned: "已收集",
                 missing: "未收集",
                 total: "总计",
@@ -463,6 +526,8 @@
                 title: "Карты Асара",
                 subtitle: "Delta Force — Отслеживание коллекции",
                 langLabel: "Язык:",
+                usersLbl: "Визиты:",
+                paypalLbl: "Поддержать",
                 owned: "Собрано",
                 missing: "Отсутствует",
                 total: "Всего",
@@ -489,7 +554,7 @@
         // Langue courante
         let currentLang = localStorage.getItem('df_asara_lang') || 'fr';
 
-        // Structure de base des cartes (clés de fichier inchangées pour charger depuis le dossier ./Cards/)
+        // Cartes Spéciales
         const specialCards = [
             { id: "Boite de cartes", key: "cardBox", file: "Boite de cartes", suit: "Special" },
             { id: "Grand Joker", key: "bigJoker", file: "Grand Joker", suit: "Special" },
@@ -524,9 +589,6 @@
             const valName = lang.values[card.val] || card.val;
             const suitName = lang.suits[card.suit];
 
-            if (currentLang === 'en' || currentLang === 'zh') {
-                return `${valName} ${suitName}`;
-            }
             return `${valName} ${suitName}`;
         }
 
@@ -537,6 +599,8 @@
             document.getElementById('txt-title').textContent = t.title;
             document.getElementById('txt-subtitle').textContent = t.subtitle;
             document.getElementById('txt-lang-label').textContent = t.langLabel;
+            document.getElementById('txt-users-lbl').textContent = t.usersLbl;
+            document.getElementById('txt-paypal-lbl').textContent = t.paypalLbl;
 
             document.getElementById('txt-owned-lbl').textContent = t.owned;
             document.getElementById('txt-missing-lbl').textContent = t.missing;
@@ -650,9 +714,25 @@
             }
         }
 
+        // Compteur global de visites (CountAPI)
+        function fetchUserCount() {
+            const namespace = "deltaforce-asara-tracker-global";
+            const key = "visits";
+
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('userCount').textContent = data.value.toLocaleString();
+                })
+                .catch(err => {
+                    document.getElementById('userCount').textContent = "1";
+                });
+        }
+
         // Init
         applyLanguage();
         renderGrid();
+        fetchUserCount();
     </script>
 </body>
 
