@@ -362,7 +362,7 @@
         </div>
 
         <div class="header-actions">
-            <!-- Compteur de utilisateurs / visites -->
+            <!-- Compteur d'utilisateurs uniques -->
             <div class="user-counter">
                 👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">...</strong>
             </div>
@@ -714,35 +714,35 @@
             }
         }
 
-       // Compteur d'utilisateurs uniques
-function fetchUserCount() {
-    const namespace = "deltaforce-asara-tracker-unique-users";
-    const key = "users_count";
-    const hasVisited = localStorage.getItem('df_asara_user_registered');
+        // Compteur d'utilisateurs uniques
+        function fetchUserCount() {
+            const namespace = "deltaforce-asara-tracker-unique-users";
+            const key = "users_count";
+            const hasVisited = localStorage.getItem('df_asara_user_registered');
 
-    if (!hasVisited) {
-        // Premier passage de cet utilisateur : on incrémente le compteur global (+1)
-        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-            .then(response => response.json())
-            .then(data => {
-                // Marquer cet utilisateur comme enregistré dans son navigateur
-                localStorage.setItem('df_asara_user_registered', 'true');
-                document.getElementById('userCount').textContent = data.count.toLocaleString();
-            })
-            .catch(err => {
-                document.getElementById('userCount').textContent = "1";
-            });
-    } else {
-        // L'utilisateur est déjà repéré : on récupère juste la valeur actuelle sans incrémenter
-        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('userCount').textContent = data.count.toLocaleString();
-            })
-            .catch(err => {
-                document.getElementById('userCount').textContent = "1";
-            });
-    }
+            if (!hasVisited) {
+                // Premier passage de cet utilisateur : on incrémente le compteur global (+1)
+                fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+                    .then(response => response.json())
+                    .then(data => {
+                        localStorage.setItem('df_asara_user_registered', 'true');
+                        document.getElementById('userCount').textContent = data.count.toLocaleString();
+                    })
+                    .catch(err => {
+                        document.getElementById('userCount').textContent = "1";
+                    });
+            } else {
+                // L'utilisateur est déjà repéré : on récupère juste la valeur actuelle sans incrémenter
+                fetch(`https://api.counterapi.dev/v1/${namespace}/${key}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('userCount').textContent = data.count.toLocaleString();
+                    })
+                    .catch(err => {
+                        document.getElementById('userCount').textContent = "1";
+                    });
+            }
+        }
 
         // Init
         applyLanguage();
