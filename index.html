@@ -291,8 +291,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            
-            /* Non possédée : opaque */
             opacity: 1;
         }
 
@@ -375,7 +373,7 @@
         <div class="header-actions">
             <!-- Compteur d'utilisateurs -->
             <div class="user-counter">
-                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">1</strong>
+                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">...</strong>
             </div>
 
             <!-- Bouton Don PayPal -->
@@ -798,19 +796,29 @@
             }
         }
 
-        // Compteur de visites local
+        // VRAI COMPTEUR DISTANT UNIFIE
         function fetchUserCount() {
-            try {
-                let visits = parseInt(localStorage.getItem('df_asara_visit_count') || '0', 10);
-                if (!sessionStorage.getItem('df_asara_session')) {
-                    visits += 1;
-                    localStorage.setItem('df_asara_visit_count', visits.toString());
-                    sessionStorage.setItem('df_asara_session', 'true');
-                }
-                document.getElementById('userCount').textContent = visits.toString();
-            } catch (e) {
-                document.getElementById('userCount').textContent = "1";
-            }
+            const namespace = "deltaforce-ahsarah-cards-v1";
+            const key = "visites";
+            const hasRegistered = localStorage.getItem('df_registered_visit');
+
+            // Si le visiteur est nouveau, on incrémente (+1), sinon on lit simplement la valeur actuelle
+            const action = !hasRegistered ? "up" : "get";
+
+            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/${action}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && typeof data.count !== "undefined") {
+                        if (!hasRegistered) localStorage.setItem('df_registered_visit', 'true');
+                        document.getElementById('userCount').textContent = data.count.toLocaleString();
+                    } else {
+                        document.getElementById('userCount').textContent = "1";
+                    }
+                })
+                .catch(() => {
+                    // Fallback neutre si l'API ne répond pas
+                    document.getElementById('userCount').textContent = "1";
+                });
         }
 
         // Initialisation
