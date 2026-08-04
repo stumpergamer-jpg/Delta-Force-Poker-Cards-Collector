@@ -1,5 +1,5 @@
 Delta Force — Ahsarah Card Collection Tracker
-A lightweight, standalone, and feature-complete web tool designed to easily track your progress through the 55 Asara cards in Delta Force.
+A lightweight, standalone, and feature-complete web tool designed to easily track your progress through the 54 Ahsarah cards in Delta Force.
 
 ✨ Key Features
 Interactive Visual Tracking: Click on any card to instantly toggle its status (green background for Collected, red background for Missing).
@@ -21,7 +21,7 @@ Auto-Save: Your collection progress is stored locally in your browser (localStor
 Sleek Gaming UI: Clean, modern dark mode interface optimized for both desktop and mobile screens.
 
 🌍 Supported Languages
-The entire UI and all 55 card names translate instantly with the built-in language selector:
+The entire UI and all 54 card names translate instantly with the built-in language selector:
 
 🇬🇧 English
 
