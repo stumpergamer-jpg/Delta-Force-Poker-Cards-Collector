@@ -12,9 +12,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent-blue: #38bdf8;
-
-            --owned-color: #15803d;
-            --missing-color: #7f1d1d;
         }
 
         * {
@@ -282,18 +279,21 @@
         }
 
         .card-item {
-            background-color: var(--missing-color);
+            background-color: var(--panel-bg);
             border: 2px solid var(--rarity-color, #475569);
             border-radius: 12px;
             padding: 12px;
             text-align: center;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 0 8px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
+            
+            /* Non possédée : opaque */
+            opacity: 1;
         }
 
         .card-item:hover {
@@ -301,8 +301,13 @@
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), 0 0 12px var(--rarity-color, rgba(255, 255, 255, 0.2));
         }
 
+        /* Possédée : transparence élevée */
         .card-item.owned {
-            background-color: var(--owned-color);
+            opacity: 0.35;
+        }
+
+        .card-item.owned:hover {
+            opacity: 0.75;
         }
 
         .card-img-wrapper {
@@ -310,7 +315,7 @@
             height: 140px;
             border-radius: 6px;
             margin-bottom: 10px;
-            background-color: rgba(0, 0, 0, 0.25);
+            background-color: rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -347,6 +352,14 @@
             opacity: 0.9;
             margin-top: 2px;
             font-weight: 600;
+        }
+
+        .card-item.owned .card-status {
+            color: #22c55e;
+        }
+
+        .card-item:not(.owned) .card-status {
+            color: #ef4444;
         }
     </style>
 </head>
