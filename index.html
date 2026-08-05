@@ -69,23 +69,6 @@
             flex-wrap: wrap;
         }
 
-        .user-counter {
-            background-color: var(--panel-bg);
-            border: 1px solid #334155;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .user-counter strong {
-            color: var(--accent-blue);
-        }
-
         .btn-paypal {
             background-color: #0070ba;
             color: #ffffff;
@@ -371,11 +354,6 @@
         </div>
 
         <div class="header-actions">
-            <!-- Compteur d'utilisateurs -->
-            <div class="user-counter">
-                👥 <span id="txt-users-lbl">Visites :</span> <strong id="userCount">...</strong>
-            </div>
-
             <!-- Bouton Don PayPal -->
             <a href="https://paypal.me/TKowalczyk" target="_blank" class="btn-paypal" id="btn-paypal">
                 ☕ <span id="txt-paypal-lbl">Faire un don</span>
@@ -462,7 +440,6 @@
                 title: "Cartes Ahsarah",
                 subtitle: "Delta Force — Suivi de Collection",
                 langLabel: "Langue :",
-                usersLbl: "Visites :",
                 paypalLbl: "Faire un don",
                 owned: "Possédées",
                 missing: "Manquantes",
@@ -495,7 +472,6 @@
                 title: "Ahsarah Cards",
                 subtitle: "Delta Force — Collection Tracker",
                 langLabel: "Language:",
-                usersLbl: "Visits:",
                 paypalLbl: "Donate",
                 owned: "Collected",
                 missing: "Missing",
@@ -528,7 +504,6 @@
                 title: "阿萨拉扑克牌",
                 subtitle: "三角洲行动 — 收集跟踪器",
                 langLabel: "语言:",
-                usersLbl: "访问量:",
                 paypalLbl: "捐赠支持",
                 owned: "已收集",
                 missing: "未收集",
@@ -561,7 +536,6 @@
                 title: "Карты Асара",
                 subtitle: "Delta Force — Отслеживание коллекции",
                 langLabel: "Язык:",
-                usersLbl: "Визиты:",
                 paypalLbl: "Поддержать",
                 owned: "Собрано",
                 missing: "Отсутствует",
@@ -660,7 +634,6 @@
             document.getElementById('txt-title').textContent = t.title;
             document.getElementById('txt-subtitle').textContent = t.subtitle;
             document.getElementById('txt-lang-label').textContent = t.langLabel;
-            document.getElementById('txt-users-lbl').textContent = t.usersLbl;
             document.getElementById('txt-paypal-lbl').textContent = t.paypalLbl;
 
             document.getElementById('txt-owned-lbl').textContent = t.owned;
@@ -796,35 +769,9 @@
             }
         }
 
-        // COMPTEUR UNIVERSEL AUTO-GÉNÉRÉ (countapi.hit.as)
-        async function fetchUserCount() {
-            const domain = "deltaforce-ahsarah-collection-tracker";
-            const key = "visites";
-            const hasRegistered = localStorage.getItem('df_registered_visit');
-
-            // Si nouveau visiteur (ou navigation privée) -> hit (+1), sinon -> get (simple lecture)
-            const action = !hasRegistered ? "hit" : "get";
-            const url = `https://api.countapi.xyz/${action}/${domain}/${key}`;
-
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && typeof data.value !== "undefined") {
-                        if (!hasRegistered) localStorage.setItem('df_registered_visit', 'true');
-                        document.getElementById('userCount').textContent = data.value.toLocaleString();
-                    }
-                }
-            } catch (e) {
-                // Si l'API est temporairement bloquée par un adblocker ou coupée, fallback sur 1
-                document.getElementById('userCount').textContent = "1";
-            }
-        }
-
         // Initialisation
         applyLanguage();
         renderGrid();
-        fetchUserCount();
     </script>
 </body>
 
