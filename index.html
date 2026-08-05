@@ -24,69 +24,122 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 10px 12px;
+            padding: 14px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* --- EN-TÊTE ULTRA COMPACT --- */
+        /* --- EN-TÊTE REVISEE --- */
         .header-container {
             width: 100%;
             max-width: 1100px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-titles {
+            display: flex;
+            flex-direction: column;
         }
 
         .header-title {
             margin: 0;
             color: var(--accent-blue);
-            font-size: 1.1rem;
+            font-size: 1.6rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin: 2px 0 0 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
 
+        /* Bouton Don PayPal Premium */
         .btn-paypal {
-            background-color: #0070ba;
+            background: linear-gradient(135deg, #0070ba, #00457c);
             color: #ffffff;
-            border: 1px solid #005ea6;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            border: 1px solid #38bdf8;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
             font-weight: 700;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 112, 186, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-paypal:hover {
+            background: linear-gradient(135deg, #005ea6, #003057);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 112, 186, 0.6);
+        }
+
+        /* Sélecteur de Langue Stylisé */
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--panel-bg);
+            border: 1px solid #334155;
+            padding: 4px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.2s;
+        }
+
+        .lang-selector:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .lang-selector label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .lang-selector select {
             background-color: #0f172a;
             color: var(--text-main);
             border: 1px solid #475569;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
             cursor: pointer;
+            outline: none;
         }
 
         /* --- DASHBOARD REDUIT --- */
         .dashboard {
             background-color: var(--panel-bg);
             border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 10px 14px;
             width: 100%;
             max-width: 1100px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            margin-bottom: 12px;
+            box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.5);
         }
 
         .top-bar {
@@ -99,29 +152,29 @@
 
         .progress-section {
             flex: 1;
-            min-width: 220px;
+            min-width: 240px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
 
         .progress-stats {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 600;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
         }
 
         .stat-badge { display: inline-flex; align-items: center; gap: 4px; }
-        .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .dot.green { background-color: #22c55e; }
         .dot.red { background-color: #ef4444; }
 
         .progress-bar-bg {
             background-color: #0f172a;
-            height: 6px;
-            border-radius: 3px;
+            height: 7px;
+            border-radius: 4px;
             overflow: hidden;
             border: 1px solid #334155;
         }
@@ -136,19 +189,19 @@
         .search-container {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             background-color: #0f172a;
             border: 1px solid #334155;
-            padding: 3px 8px;
-            border-radius: 5px;
-            width: 160px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            width: 180px;
         }
 
         .search-container input {
             background: transparent;
             border: none;
             color: var(--text-main);
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             outline: none;
             width: 100%;
         }
@@ -157,22 +210,23 @@
             background-color: #0f172a;
             color: var(--accent-blue);
             border: 1px solid #334155;
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 4px;
+            transition: all 0.2s;
         }
 
         .btn-toggle-filters:hover {
-            background-color: #38bdf8;
+            background-color: var(--accent-blue);
             color: #0b0f19;
         }
 
-        /* FILTRES ACCORDION (CASHÉS PAR DÉFAUT) */
+        /* PANNEAU DE FILTRES REPLIABLE */
         .filters-panel {
             display: none;
             flex-direction: column;
@@ -200,7 +254,7 @@
         }
 
         .filter-label {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             color: var(--text-muted);
             font-weight: bold;
@@ -216,11 +270,12 @@
             background-color: #0f172a;
             color: var(--text-main);
             border: 1px solid #334155;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 600;
+            transition: all 0.15s ease;
         }
 
         .btn-filter.active {
@@ -233,9 +288,9 @@
             background-color: #0f172a;
             color: var(--text-main);
             border: 1px solid #475569;
-            padding: 2px 6px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
         }
 
         .zoom-control {
@@ -258,10 +313,10 @@
             background-color: #334155;
             color: #ffffff;
             border: 1px solid #475569;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             margin-left: auto;
         }
 
@@ -288,6 +343,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .card-item:hover {
@@ -337,16 +394,23 @@
 <body>
 
     <div class="header-container">
-        <h1 class="header-title" id="txt-title">Cartes Ahsarah</h1>
+        <div class="header-titles">
+            <h1 class="header-title" id="txt-title">Cartes Ahsarah</h1>
+            <div class="subtitle" id="txt-subtitle">Delta Force — Suivi de Collection</div>
+        </div>
 
         <div class="header-actions">
-            <a href="https://paypal.me/TKowalczyk" target="_blank" class="btn-paypal" id="btn-paypal">☕ Don</a>
+            <a href="https://paypal.me/TKowalczyk" target="_blank" class="btn-paypal" id="btn-paypal">
+                ☕ <span id="txt-paypal-lbl">Faire un don</span>
+            </a>
+
             <div class="lang-selector">
+                <label for="langSelect" id="txt-lang-label">🌐</label>
                 <select id="langSelect" onchange="changeLanguage(this.value)">
-                    <option value="fr">FR</option>
-                    <option value="en">EN</option>
-                    <option value="zh">ZH</option>
-                    <option value="ru">RU</option>
+                    <option value="fr">Français</option>
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                    <option value="ru">Русский</option>
                 </select>
             </div>
         </div>
@@ -357,9 +421,9 @@
         <div class="top-bar">
             <div class="progress-section">
                 <div class="progress-stats">
-                    <span class="stat-badge"><span class="dot green"></span> <strong id="ownedCount">0</strong></span>
-                    <span class="stat-badge"><span class="dot red"></span> <strong id="missingCount">0</strong></span>
-                    <span>Total: <strong id="totalCount">55</strong></span>
+                    <span class="stat-badge"><span class="dot green"></span> <span id="txt-owned-lbl">Possédées</span> : <strong id="ownedCount">0</strong></span>
+                    <span class="stat-badge"><span class="dot red"></span> <span id="txt-missing-lbl">Manquantes</span> : <strong id="missingCount">0</strong></span>
+                    <span><span id="txt-total-lbl">Total</span> : <strong id="totalCount">55</strong></span>
                     <span style="color: var(--accent-blue);" id="percentageText">0%</span>
                 </div>
                 <div class="progress-bar-bg">
@@ -372,64 +436,64 @@
                 <input type="text" id="searchInput" placeholder="Chercher..." oninput="renderGrid()">
             </div>
 
-            <button class="btn-toggle-filters" onclick="toggleFiltersPanel()" id="btn-toggle">
+            <button class="btn-toggle-filters" onclick="toggleFiltersPanel()">
                 ⚙️ <span id="txt-toggle-label">Filtres</span>
             </button>
         </div>
 
-        <!-- PANNEAU DE FILTRES REPLIABLE (DEPLIABLE AU CLIC) -->
+        <!-- PANNEAU DE FILTRES REPLIABLE -->
         <div class="filters-panel" id="filtersPanel">
             <div class="filters-row">
                 <div class="filter-group">
-                    <span class="filter-label">Rareté :</span>
+                    <span class="filter-label" id="txt-filter-rarity">Rareté :</span>
                     <div class="filter-buttons">
-                        <button class="btn-filter active" onclick="setRarityFilter('all', this)">Toutes</button>
-                        <button class="btn-filter" onclick="setRarityFilter('red', this)">🔴</button>
-                        <button class="btn-filter" onclick="setRarityFilter('orange', this)">🟠</button>
-                        <button class="btn-filter" onclick="setRarityFilter('purple', this)">🟣</button>
-                        <button class="btn-filter" onclick="setRarityFilter('blue', this)">🔵</button>
-                        <button class="btn-filter" onclick="setRarityFilter('green', this)">🟢</button>
+                        <button class="btn-filter active" onclick="setRarityFilter('all', this)" id="btn-rarity-all">Toutes</button>
+                        <button class="btn-filter" onclick="setRarityFilter('red', this)">🔴 Ultime</button>
+                        <button class="btn-filter" onclick="setRarityFilter('orange', this)">🟠 Légendaire</button>
+                        <button class="btn-filter" onclick="setRarityFilter('purple', this)">🟣 Épique</button>
+                        <button class="btn-filter" onclick="setRarityFilter('blue', this)">🔵 Rare</button>
+                        <button class="btn-filter" onclick="setRarityFilter('green', this)">🟢 Inhabituel</button>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <span class="filter-label">Couleur :</span>
+                    <span class="filter-label" id="txt-filter-type">Type :</span>
                     <div class="filter-buttons">
-                        <button class="btn-filter active" onclick="setSuitFilter('all', this)">Toutes</button>
-                        <button class="btn-filter" onclick="setSuitFilter('Pique', this)">♠</button>
-                        <button class="btn-filter" onclick="setSuitFilter('Coeur', this)">♥</button>
-                        <button class="btn-filter" onclick="setSuitFilter('Trèfle', this)">♣</button>
-                        <button class="btn-filter" onclick="setSuitFilter('Carreau', this)">♦</button>
-                        <button class="btn-filter" onclick="setSuitFilter('Special', this)">★</button>
+                        <button class="btn-filter active" onclick="setSuitFilter('all', this)" id="btn-suit-all">Toutes</button>
+                        <button class="btn-filter" onclick="setSuitFilter('Pique', this)" id="btn-suit-spade">♠ Pique</button>
+                        <button class="btn-filter" onclick="setSuitFilter('Coeur', this)" id="btn-suit-heart">♥ Cœur</button>
+                        <button class="btn-filter" onclick="setSuitFilter('Trèfle', this)" id="btn-suit-club">♣ Trèfle</button>
+                        <button class="btn-filter" onclick="setSuitFilter('Carreau', this)" id="btn-suit-diamond">♦ Carreau</button>
+                        <button class="btn-filter" onclick="setSuitFilter('Special', this)" id="btn-suit-special">★ Spéciales</button>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <span class="filter-label">Voir :</span>
+                    <span class="filter-label" id="txt-filter-status">Voir :</span>
                     <div class="filter-buttons">
-                        <button class="btn-filter active" onclick="setStatusFilter('all', this)">Toutes</button>
-                        <button class="btn-filter" onclick="setStatusFilter('owned', this)">Possédées</button>
-                        <button class="btn-filter" onclick="setStatusFilter('missing', this)">Manquantes</button>
+                        <button class="btn-filter active" onclick="setStatusFilter('all', this)" id="btn-status-all">Toutes</button>
+                        <button class="btn-filter" onclick="setStatusFilter('owned', this)" id="btn-status-owned">Possédées</button>
+                        <button class="btn-filter" onclick="setStatusFilter('missing', this)" id="btn-status-missing">Manquantes</button>
                     </div>
                 </div>
             </div>
 
             <div class="filters-row">
                 <div class="sort-selector" style="display:flex; align-items:center; gap:4px;">
-                    <span class="filter-label">Tri :</span>
+                    <span class="filter-label" id="txt-sort-label">Tri :</span>
                     <select id="sortSelect" onchange="renderGrid()">
-                        <option value="default">Défaut</option>
-                        <option value="rarity">Rareté</option>
-                        <option value="name">Nom (A-Z)</option>
-                        <option value="value">Valeur</option>
+                        <option value="default" id="opt-sort-default">Défaut</option>
+                        <option value="rarity" id="opt-sort-rarity">Rareté</option>
+                        <option value="name" id="opt-sort-name">Nom (A-Z)</option>
+                        <option value="value" id="opt-sort-value">Valeur</option>
                     </select>
                 </div>
 
                 <div style="display: flex; gap: 4px;">
-                    <button class="btn-action" onclick="checkAllVisible(true)" title="Tout cocher">✓</button>
-                    <button class="btn-action" onclick="checkAllVisible(false)" title="Tout décocher">✗</button>
-                    <button class="btn-action" onclick="exportJSON()" title="Exporter">📥 JSON</button>
-                    <button class="btn-action" onclick="document.getElementById('importFile').click()" title="Importer">📤 JSON</button>
+                    <button class="btn-action" onclick="checkAllVisible(true)" title="Tout cocher" id="btn-check-all">✓ Tout</button>
+                    <button class="btn-action" onclick="checkAllVisible(false)" title="Tout décocher" id="btn-uncheck-all">✗ Aucun</button>
+                    <button class="btn-action" onclick="exportJSON()" title="Exporter" id="btn-export">📥 Exporter</button>
+                    <button class="btn-action" onclick="document.getElementById('importFile').click()" title="Importer" id="btn-import">📤 Importer</button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importJSON(event)">
                 </div>
 
@@ -438,7 +502,7 @@
                     <input type="range" id="cardSizeSlider" min="80" max="180" value="120" oninput="updateCardSize(this.value)">
                 </div>
 
-                <button class="btn-reset" onclick="resetCollection()">Reset</button>
+                <button class="btn-reset" onclick="resetCollection()" id="btn-reset">Réinitialiser</button>
             </div>
         </div>
     </div>
@@ -449,26 +513,171 @@
     <script>
         const folder = "./Cards/";
 
+        // TRADUCTIONS COMPLETES RESTAUREES
         const i18n = {
             fr: {
                 title: "Cartes Ahsarah",
+                subtitle: "Delta Force — Suivi de Collection",
+                paypalLbl: "Faire un don",
+                owned: "Possédées",
+                missing: "Manquantes",
+                total: "Total",
                 searchPlaceholder: "Chercher...",
                 toggleFilters: "Filtres",
-                resetConfirm: "Réinitialiser toute la collection ?",
-                statusOwned: "Possédée",
-                statusMissing: "Manquante",
+                filterRarity: "Rareté :",
+                filterType: "Type :",
+                filterStatus: "Voir :",
+                sortLabel: "Tri :",
+                sortDefault: "Défaut",
+                sortRarity: "Rareté",
+                sortName: "Nom (A-Z)",
+                sortValue: "Valeur",
+                all: "Toutes",
+                spade: "♠ Pique",
+                heart: "♥ Cœur",
+                club: "♣ Trèfle",
+                diamond: "♦ Carreau",
+                special: "★ Spéciales",
+                statusOwned: "Possédées",
+                statusMissing: "Manquantes",
+                checkAll: "✓ Tout",
+                uncheckAll: "✗ Aucun",
+                exportBtn: "📥 Exporter",
+                importBtn: "📤 Importer",
+                reset: "Réinitialiser",
+                resetConfirm: "Voulez-vous vraiment réinitialiser toute votre collection ?",
+                importSuccess: "Collection importée avec succès !",
+                importError: "Fichier JSON invalide.",
+                cardBox: "Boîte de cartes",
+                bigJoker: "Grand Joker",
+                smallJoker: "Petit Joker",
+                cardStatusOwned: "Possédée",
+                cardStatusMissing: "Manquante",
                 suits: { Pique: "Pique", Coeur: "Cœur", Trèfle: "Trèfle", Carreau: "Carreau" },
                 values: { As: "As", Valet: "Valet", Dame: "Dame", Roi: "Roi" }
             },
             en: {
                 title: "Ahsarah Cards",
+                subtitle: "Delta Force — Collection Tracker",
+                paypalLbl: "Donate",
+                owned: "Collected",
+                missing: "Missing",
+                total: "Total",
                 searchPlaceholder: "Search...",
                 toggleFilters: "Filters",
-                resetConfirm: "Reset entire collection?",
+                filterRarity: "Rarity:",
+                filterType: "Suit:",
+                filterStatus: "View:",
+                sortLabel: "Sort:",
+                sortDefault: "Default",
+                sortRarity: "Rarity",
+                sortName: "Name (A-Z)",
+                sortValue: "Value",
+                all: "All",
+                spade: "♠ Spades",
+                heart: "♥ Hearts",
+                club: "♣ Clubs",
+                diamond: "♦ Diamonds",
+                special: "★ Specials",
                 statusOwned: "Collected",
                 statusMissing: "Missing",
+                checkAll: "✓ All",
+                uncheckAll: "✗ None",
+                exportBtn: "📥 Export",
+                importBtn: "📤 Import",
+                reset: "Reset",
+                resetConfirm: "Are you sure you want to reset your entire collection?",
+                importSuccess: "Collection imported successfully!",
+                importError: "Invalid JSON file.",
+                cardBox: "Card Box",
+                bigJoker: "Big Joker",
+                smallJoker: "Small Joker",
+                cardStatusOwned: "Collected",
+                cardStatusMissing: "Missing",
                 suits: { Pique: "Spades", Coeur: "Hearts", Trèfle: "Clubs", Carreau: "Diamonds" },
                 values: { As: "Ace", Valet: "Jack", Dame: "Queen", Roi: "King" }
+            },
+            zh: {
+                title: "阿萨拉扑克牌",
+                subtitle: "三角洲行动 — 收集跟踪器",
+                paypalLbl: "捐赠",
+                owned: "已收集",
+                missing: "未收集",
+                total: "总计",
+                searchPlaceholder: "搜索...",
+                toggleFilters: "筛选器",
+                filterRarity: "稀有度:",
+                filterType: "花色:",
+                filterStatus: "显示:",
+                sortLabel: "排序:",
+                sortDefault: "默认",
+                sortRarity: "稀有度",
+                sortName: "名称 (A-Z)",
+                sortValue: "数值",
+                all: "全部",
+                spade: "♠ 黑桃",
+                heart: "♥ 红桃",
+                club: "♣ 梅花",
+                diamond: "♦ 方块",
+                special: "★ 特殊",
+                statusOwned: "已收集",
+                statusMissing: "未收集",
+                checkAll: "✓ 全选",
+                uncheckAll: "✗ 取消全选",
+                exportBtn: "📥 导出",
+                importBtn: "📤 导入",
+                reset: "重置",
+                resetConfirm: "您确定要重置所有收集进度吗？",
+                importSuccess: "成功导入数据！",
+                importError: "无效的 JSON 文件。",
+                cardBox: "卡盒",
+                bigJoker: "大王",
+                smallJoker: "小王",
+                cardStatusOwned: "已收集",
+                cardStatusMissing: "未收集",
+                suits: { Pique: "黑桃", Coeur: "红桃", Trèfle: "梅花", Carreau: "方块" },
+                values: { As: "A", Valet: "J", Dame: "Q", Roi: "K" }
+            },
+            ru: {
+                title: "Карты Асара",
+                subtitle: "Delta Force — Отслеживание коллекции",
+                paypalLbl: "Поддержать",
+                owned: "Собрано",
+                missing: "Отсутствует",
+                total: "Всего",
+                searchPlaceholder: "Поиск...",
+                toggleFilters: "Фильтры",
+                filterRarity: "Редкость:",
+                filterType: "Масть:",
+                filterStatus: "Вид:",
+                sortLabel: "Сортировка:",
+                sortDefault: "По умолчанию",
+                sortRarity: "Редкость",
+                sortName: "Имя (А-Я)",
+                sortValue: "Значение",
+                all: "Все",
+                spade: "♠ Пики",
+                heart: "♥ Черви",
+                club: "♣ Трефы",
+                diamond: "♦ Бубны",
+                special: "★ Особые",
+                statusOwned: "Собрано",
+                statusMissing: "Отсутствует",
+                checkAll: "✓ Все",
+                uncheckAll: "✗ Ничего",
+                exportBtn: "📥 Экспорт",
+                importBtn: "📤 Импорт",
+                reset: "Сброс",
+                resetConfirm: "Вы уверены, что хотите сбросить всю коллекцию?",
+                importSuccess: "Коллекция успешно импортирована!",
+                importError: "Недействительный файл JSON.",
+                cardBox: "Коробка карт",
+                bigJoker: "Большой Джокер",
+                smallJoker: "Малый Джокер",
+                cardStatusOwned: "Собрано",
+                cardStatusMissing: "Отсутствует",
+                suits: { Pique: "Пики", Coeur: "Черви", Trèfle: "Трефы", Carreau: "Бубны" },
+                values: { As: "Туз", Valet: "Валет", Dame: "Дама", Roi: "Король" }
             }
         };
 
@@ -507,7 +716,9 @@
 
         function getCardDisplayName(card) {
             const lang = i18n[currentLang] || i18n.fr;
-            if (card.suit === 'Special') return card.id;
+            if (card.suit === 'Special') {
+                return lang[card.key] || card.id;
+            }
             const valName = (lang.values && lang.values[card.val]) ? lang.values[card.val] : card.val;
             const suitName = (lang.suits && lang.suits[card.suit]) ? lang.suits[card.suit] : card.suit;
             return `${valName} ${suitName}`;
@@ -520,9 +731,45 @@
         function applyLanguage() {
             const t = i18n[currentLang] || i18n.fr;
             document.getElementById('langSelect').value = currentLang;
+
             document.getElementById('txt-title').textContent = t.title;
+            document.getElementById('txt-subtitle').textContent = t.subtitle;
+            document.getElementById('txt-paypal-lbl').textContent = t.paypalLbl;
+
+            document.getElementById('txt-owned-lbl').textContent = t.owned;
+            document.getElementById('txt-missing-lbl').textContent = t.missing;
+            document.getElementById('txt-total-lbl').textContent = t.total;
+
             document.getElementById('searchInput').placeholder = t.searchPlaceholder;
             document.getElementById('txt-toggle-label').textContent = t.toggleFilters;
+
+            document.getElementById('txt-filter-rarity').textContent = t.filterRarity;
+            document.getElementById('btn-rarity-all').textContent = t.all;
+
+            document.getElementById('txt-filter-type').textContent = t.filterType;
+            document.getElementById('btn-suit-all').textContent = t.all;
+            document.getElementById('btn-suit-spade').textContent = t.spade;
+            document.getElementById('btn-suit-heart').textContent = t.heart;
+            document.getElementById('btn-suit-club').textContent = t.club;
+            document.getElementById('btn-suit-diamond').textContent = t.diamond;
+            document.getElementById('btn-suit-special').textContent = t.special;
+
+            document.getElementById('txt-filter-status').textContent = t.filterStatus;
+            document.getElementById('btn-status-all').textContent = t.all;
+            document.getElementById('btn-status-owned').textContent = t.statusOwned;
+            document.getElementById('btn-status-missing').textContent = t.statusMissing;
+
+            document.getElementById('txt-sort-label').textContent = t.sortLabel;
+            document.getElementById('opt-sort-default').textContent = t.sortDefault;
+            document.getElementById('opt-sort-rarity').textContent = t.sortRarity;
+            document.getElementById('opt-sort-name').textContent = t.sortName;
+            document.getElementById('opt-sort-value').textContent = t.sortValue;
+
+            document.getElementById('btn-check-all').textContent = t.checkAll;
+            document.getElementById('btn-uncheck-all').textContent = t.uncheckAll;
+            document.getElementById('btn-export').textContent = t.exportBtn;
+            document.getElementById('btn-import').textContent = t.importBtn;
+            document.getElementById('btn-reset').textContent = t.reset;
         }
 
         function changeLanguage(lang) {
@@ -609,7 +856,7 @@
                              loading="lazy">
                     </div>
                     <div class="card-name" title="${displayName}">${displayName}</div>
-                    <div class="card-status">${isOwned ? t.statusOwned : t.statusMissing}</div>
+                    <div class="card-status">${isOwned ? t.cardStatusOwned : t.cardStatusMissing}</div>
                 `;
 
                 grid.appendChild(cardEl);
@@ -642,6 +889,7 @@
 
         function importJSON(event) {
             const file = event.target.files[0];
+            const t = i18n[currentLang] || i18n.fr;
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -649,7 +897,10 @@
                     ownedCards = JSON.parse(e.target.result);
                     localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
                     renderGrid();
-                } catch (err) {}
+                    alert(t.importSuccess);
+                } catch (err) {
+                    alert(t.importError);
+                }
             };
             reader.readAsText(file);
         }
@@ -684,6 +935,7 @@
             }
         }
 
+        // Initialisation
         applyLanguage();
         loadCardSize();
         renderGrid();
