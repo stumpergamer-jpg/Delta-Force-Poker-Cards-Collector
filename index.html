@@ -106,7 +106,7 @@
             font-weight: 600;
         }
 
-        .lang-selector select {
+        .lang-selector select, .sort-selector select {
             background-color: #0f172a;
             color: var(--text-main);
             border: 1px solid #475569;
@@ -117,7 +117,7 @@
             outline: none;
         }
 
-        .lang-selector select:hover {
+        .lang-selector select:hover, .sort-selector select:hover {
             border-color: var(--accent-blue);
         }
 
@@ -209,7 +209,7 @@
             gap: 8px;
         }
 
-        .btn-filter {
+        .btn-filter, .btn-action {
             background-color: #0f172a;
             color: var(--text-main);
             border: 1px solid #334155;
@@ -224,7 +224,7 @@
             gap: 6px;
         }
 
-        .btn-filter:hover {
+        .btn-filter:hover, .btn-action:hover {
             border-color: var(--accent-blue);
             color: var(--accent-blue);
         }
@@ -235,32 +235,56 @@
             border-color: var(--accent-blue);
         }
 
-        /* Contour taille des cartes */
+        /* Barre de Recherche */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+        }
+
+        /* Controls Row */
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            border-top: 1px solid #334155;
+            padding-top: 15px;
+        }
+
         .zoom-control {
             display: flex;
             align-items: center;
             gap: 12px;
             background-color: #0f172a;
             border: 1px solid #334155;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 8px;
-            width: fit-content;
-        }
-
-        .zoom-control label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: bold;
         }
 
         .zoom-control input[type="range"] {
             accent-color: var(--accent-blue);
             cursor: pointer;
-            width: 120px;
+            width: 100px;
         }
 
         .btn-reset {
-            margin-left: auto;
             background-color: #334155;
             color: #f1f5f9;
             border: 1px solid #475569;
@@ -300,11 +324,38 @@
             flex-direction: column;
             align-items: center;
             opacity: 1;
+            position: relative;
+            overflow: hidden;
         }
 
         .card-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), 0 0 12px var(--rarity-color, rgba(255, 255, 255, 0.2));
+        }
+
+        /* Effet Holo sur Raretés Ultimes et Légendaires */
+        .card-item[data-rarity="red"]:hover::after,
+        .card-item[data-rarity="orange"]:hover::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 255, 255, 0.15) 50%,
+                transparent 60%
+            );
+            transform: rotate(25deg);
+            animation: holoShine 1.2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes holoShine {
+            0% { transform: translateY(-100%) rotate(25deg); }
+            100% { transform: translateY(100%) rotate(25deg); }
         }
 
         /* Possédée : transparence élevée */
@@ -379,12 +430,10 @@
         </div>
 
         <div class="header-actions">
-            <!-- Bouton Don PayPal -->
             <a href="https://paypal.me/TKowalczyk" target="_blank" class="btn-paypal" id="btn-paypal">
                 ☕ <span id="txt-paypal-lbl">Faire un don</span>
             </a>
 
-            <!-- Sélecteur de langue -->
             <div class="lang-selector">
                 <label for="langSelect" id="txt-lang-label">Langue :</label>
                 <select id="langSelect" onchange="changeLanguage(this.value)">
@@ -410,6 +459,24 @@
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Recherche et Tri -->
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center;">
+            <div class="search-container">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Rechercher une carte..." oninput="renderGrid()">
+            </div>
+
+            <div class="sort-selector" style="display: flex; align-items: center; gap: 8px;">
+                <label for="sortSelect" id="txt-sort-label" style="font-size:0.85rem; color:var(--text-muted); font-weight:bold;">Trier par :</label>
+                <select id="sortSelect" onchange="renderGrid()">
+                    <option value="default" id="opt-sort-default">Défaut</option>
+                    <option value="rarity" id="opt-sort-rarity">Rareté</option>
+                    <option value="name" id="opt-sort-name">Nom (A-Z)</option>
+                    <option value="value" id="opt-sort-value">Valeur (As -> Roi)</option>
+                </select>
             </div>
         </div>
 
@@ -439,24 +506,29 @@
             </div>
         </div>
 
-        <!-- Filtres par Statut, Taille & Reset -->
-        <div class="filter-group" style="flex-direction: row; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div>
-                <div class="filter-label" style="margin-bottom: 8px;" id="txt-filter-status">Affichage :</div>
-                <div class="filter-buttons">
-                    <button class="btn-filter active" onclick="setStatusFilter('all', this)" id="btn-status-all">Toutes</button>
-                    <button class="btn-filter" onclick="setStatusFilter('owned', this)" id="btn-status-owned">Possédées</button>
-                    <button class="btn-filter" onclick="setStatusFilter('missing', this)" id="btn-status-missing">Manquantes</button>
-                </div>
+        <!-- Filtres par Statut -->
+        <div class="filter-group">
+            <div class="filter-label" id="txt-filter-status">Affichage :</div>
+            <div class="filter-buttons">
+                <button class="btn-filter active" onclick="setStatusFilter('all', this)" id="btn-status-all">Toutes</button>
+                <button class="btn-filter" onclick="setStatusFilter('owned', this)" id="btn-status-owned">Possédées</button>
+                <button class="btn-filter" onclick="setStatusFilter('missing', this)" id="btn-status-missing">Manquantes</button>
+            </div>
+        </div>
+
+        <!-- Rangée d'actions rapides, Import/Export & Reset -->
+        <div class="controls-row">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn-action" onclick="checkAllVisible(true)" id="btn-check-all">✓ Tout cocher</button>
+                <button class="btn-action" onclick="checkAllVisible(false)" id="btn-uncheck-all">✗ Tout décocher</button>
+                <button class="btn-action" onclick="exportJSON()" id="btn-export">📥 Exporter JSON</button>
+                <button class="btn-action" onclick="document.getElementById('importFile').click()" id="btn-import">📤 Importer JSON</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importJSON(event)">
             </div>
 
-            <!-- Contrôle de taille des cartes -->
-            <div>
-                <div class="filter-label" style="margin-bottom: 8px;" id="txt-size-label">Taille des cartes :</div>
-                <div class="zoom-control">
-                    <span>🔍</span>
-                    <input type="range" id="cardSizeSlider" min="90" max="200" value="130" oninput="updateCardSize(this.value)">
-                </div>
+            <div class="zoom-control">
+                <span id="txt-size-label" style="font-size: 0.85rem; color: var(--text-muted); font-weight: bold;">Taille :</span>
+                <input type="range" id="cardSizeSlider" min="90" max="200" value="130" oninput="updateCardSize(this.value)">
             </div>
 
             <button class="btn-reset" onclick="resetCollection()" id="btn-reset">Réinitialiser la collection</button>
@@ -469,7 +541,6 @@
     <script>
         const folder = "./Cards/";
 
-        // TRADUCTIONS DE L'INTERFACE
         const i18n = {
             fr: {
                 title: "Cartes Ahsarah",
@@ -479,10 +550,16 @@
                 owned: "Possédées",
                 missing: "Manquantes",
                 total: "Total",
+                searchPlaceholder: "Rechercher une carte...",
+                sortLabel: "Trier par :",
+                sortDefault: "Défaut",
+                sortRarity: "Rareté",
+                sortName: "Nom (A-Z)",
+                sortValue: "Valeur (As -> Roi)",
                 filterRarity: "Filtrer par rareté :",
                 filterType: "Filtrer par couleur / type :",
                 filterStatus: "Affichage :",
-                sizeLabel: "Taille des cartes :",
+                sizeLabel: "Taille :",
                 all: "Toutes",
                 rarityRed: "🔴 Ultime",
                 rarityOrange: "🟠 Légendaire",
@@ -496,8 +573,14 @@
                 special: "★ Spéciales",
                 statusOwned: "Possédées",
                 statusMissing: "Manquantes",
-                reset: "Réinitialiser la collection",
+                checkAll: "✓ Tout cocher",
+                uncheckAll: "✗ Tout décocher",
+                exportBtn: "📥 Exporter JSON",
+                importBtn: "📤 Importer JSON",
+                reset: "Réinitialiser",
                 resetConfirm: "Voulez-vous vraiment réinitialiser toute votre collection ?",
+                importSuccess: "Collection importée avec succès !",
+                importError: "Fichier JSON invalide.",
                 cardBox: "Boîte de cartes",
                 bigJoker: "Grand Joker",
                 smallJoker: "Petit Joker",
@@ -512,10 +595,16 @@
                 owned: "Collected",
                 missing: "Missing",
                 total: "Total",
+                searchPlaceholder: "Search card...",
+                sortLabel: "Sort by:",
+                sortDefault: "Default",
+                sortRarity: "Rarity",
+                sortName: "Name (A-Z)",
+                sortValue: "Value (Ace -> King)",
                 filterRarity: "Filter by rarity:",
                 filterType: "Filter by suit / type:",
                 filterStatus: "Display:",
-                sizeLabel: "Card size:",
+                sizeLabel: "Size:",
                 all: "All",
                 rarityRed: "🔴 Ultimate",
                 rarityOrange: "🟠 Legendary",
@@ -529,8 +618,14 @@
                 special: "★ Specials",
                 statusOwned: "Collected",
                 statusMissing: "Missing",
-                reset: "Reset Collection",
+                checkAll: "✓ Check All",
+                uncheckAll: "✗ Uncheck All",
+                exportBtn: "📥 Export JSON",
+                importBtn: "📤 Import JSON",
+                reset: "Reset",
                 resetConfirm: "Are you sure you want to reset your entire collection?",
+                importSuccess: "Collection imported successfully!",
+                importError: "Invalid JSON file.",
                 cardBox: "Card Box",
                 bigJoker: "Big Joker",
                 smallJoker: "Small Joker",
@@ -545,10 +640,16 @@
                 owned: "已收集",
                 missing: "未收集",
                 total: "总计",
+                searchPlaceholder: "搜索卡牌...",
+                sortLabel: "排序方式:",
+                sortDefault: "默认",
+                sortRarity: "稀有度",
+                sortName: "名称 (A-Z)",
+                sortValue: "数值 (A -> K)",
                 filterRarity: "按稀有度筛选:",
                 filterType: "按花色/类型筛选:",
                 filterStatus: "显示:",
-                sizeLabel: "卡牌大小:",
+                sizeLabel: "大小:",
                 all: "全部",
                 rarityRed: "🔴 终极",
                 rarityOrange: "🟠 传说",
@@ -562,8 +663,14 @@
                 special: "★ 特殊",
                 statusOwned: "已收集",
                 statusMissing: "未收集",
-                reset: "重置收集进度",
+                checkAll: "✓ 全选",
+                uncheckAll: "✗ 取消全选",
+                exportBtn: "📥 导出 JSON",
+                importBtn: "📤 导入 JSON",
+                reset: "重置",
                 resetConfirm: "您确定要重置所有收集进度吗？",
+                importSuccess: "成功导入数据！",
+                importError: "无效的 JSON 文件。",
                 cardBox: "卡盒",
                 bigJoker: "大王",
                 smallJoker: "小王",
@@ -578,10 +685,16 @@
                 owned: "Собрано",
                 missing: "Отсутствует",
                 total: "Всего",
+                searchPlaceholder: "Поиск карты...",
+                sortLabel: "Сортировка:",
+                sortDefault: "По умолчанию",
+                sortRarity: "Редкость",
+                sortName: "Имя (А-Я)",
+                sortValue: "Значение (Туз -> Король)",
                 filterRarity: "Фильтр по редкости:",
                 filterType: "Фильтр по масти / типу:",
                 filterStatus: "Отображение:",
-                sizeLabel: "Размер карт:",
+                sizeLabel: "Размер:",
                 all: "Все",
                 rarityRed: "🔴 Абсолютная",
                 rarityOrange: "🟠 Легендарная",
@@ -595,8 +708,14 @@
                 special: "★ Особые",
                 statusOwned: "Собрано",
                 statusMissing: "Отсутствует",
-                reset: "Сбросить коллекцию",
+                checkAll: "✓ Выбрать все",
+                uncheckAll: "✗ Снять все",
+                exportBtn: "📥 Экспорт JSON",
+                importBtn: "📤 Импорт JSON",
+                reset: "Сброс",
                 resetConfirm: "Вы уверены, что хотите сбросить всю коллекцию?",
+                importSuccess: "Коллекция успешно импортирована!",
+                importError: "Недействительный файл JSON.",
                 cardBox: "Коробка карт",
                 bigJoker: "Большой Джокер",
                 smallJoker: "Малый Джокер",
@@ -607,7 +726,6 @@
 
         let currentLang = localStorage.getItem('df_Ahsarah_lang') || 'fr';
 
-        // Couleurs de rareté
         const rarityColors = {
             red: "#ef4444",
             orange: "#f97316",
@@ -616,11 +734,13 @@
             green: "#22c55e"
         };
 
-        // Cartes Spéciales
+        const rarityOrder = { red: 5, orange: 4, purple: 3, blue: 2, green: 1 };
+        const valueOrder = { "As": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "Valet": 11, "Dame": 12, "Roi": 13 };
+
         const specialCards = [
-            { id: "Boite de cartes", key: "cardBox", file: "Boite de cartes", suit: "Special", rarity: "red" },
-            { id: "Grand Joker", key: "bigJoker", file: "Grand Joker", suit: "Special", rarity: "red" },
-            { id: "Petit Joker", key: "smallJoker", file: "Petit Joker", suit: "Special", rarity: "orange" }
+            { id: "Boite de cartes", key: "cardBox", file: "Boite de cartes", suit: "Special", rarity: "red", val: "Special" },
+            { id: "Grand Joker", key: "bigJoker", file: "Grand Joker", suit: "Special", rarity: "red", val: "Special" },
+            { id: "Petit Joker", key: "smallJoker", file: "Petit Joker", suit: "Special", rarity: "orange", val: "Special" }
         ];
 
         const suits = [
@@ -649,7 +769,6 @@
             });
         });
 
-        // États des filtres
         let activeRarityFilter = 'all';
         let activeSuitFilter = 'all';
         let activeStatusFilter = 'all';
@@ -679,6 +798,13 @@
             document.getElementById('txt-missing-lbl').textContent = t.missing;
             document.getElementById('txt-total-lbl').textContent = t.total;
 
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('txt-sort-label').textContent = t.sortLabel;
+            document.getElementById('opt-sort-default').textContent = t.sortDefault;
+            document.getElementById('opt-sort-rarity').textContent = t.sortRarity;
+            document.getElementById('opt-sort-name').textContent = t.sortName;
+            document.getElementById('opt-sort-value').textContent = t.sortValue;
+
             document.getElementById('txt-filter-rarity').textContent = t.filterRarity;
             document.getElementById('btn-rarity-all').textContent = t.all;
             document.getElementById('btn-rarity-red').textContent = t.rarityRed;
@@ -699,6 +825,11 @@
             document.getElementById('btn-status-all').textContent = t.all;
             document.getElementById('btn-status-owned').textContent = t.statusOwned;
             document.getElementById('btn-status-missing').textContent = t.statusMissing;
+
+            document.getElementById('btn-check-all').textContent = t.checkAll;
+            document.getElementById('btn-uncheck-all').textContent = t.uncheckAll;
+            document.getElementById('btn-export').textContent = t.exportBtn;
+            document.getElementById('btn-import').textContent = t.importBtn;
 
             document.getElementById('txt-size-label').textContent = t.sizeLabel;
             document.getElementById('btn-reset').textContent = t.reset;
@@ -740,26 +871,52 @@
             document.getElementById('progressBar').style.width = `${percentage}%`;
         }
 
+        function getFilteredCards() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const sortBy = document.getElementById('sortSelect').value;
+
+            let filtered = cardsBase.filter(card => {
+                const isOwned = !!ownedCards[card.id];
+                if (activeRarityFilter !== 'all' && card.rarity !== activeRarityFilter) return false;
+                if (activeSuitFilter !== 'all' && card.suit !== activeSuitFilter) return false;
+                if (activeStatusFilter === 'owned' && !isOwned) return false;
+                if (activeStatusFilter === 'missing' && isOwned) return false;
+
+                if (searchVal !== '') {
+                    const name = getCardDisplayName(card).toLowerCase();
+                    if (!name.includes(searchVal)) return false;
+                }
+                return true;
+            });
+
+            // Tri
+            if (sortBy === 'rarity') {
+                filtered.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
+            } else if (sortBy === 'name') {
+                filtered.sort((a, b) => getCardDisplayName(a).localeCompare(getCardDisplayName(b)));
+            } else if (sortBy === 'value') {
+                filtered.sort((a, b) => (valueOrder[a.val] || 0) - (valueOrder[b.val] || 0));
+            }
+
+            return filtered;
+        }
+
         function renderGrid() {
             const grid = document.getElementById('cardsGrid');
             const t = i18n[currentLang] || i18n.fr;
             grid.innerHTML = '';
 
-            cardsBase.forEach((card) => {
+            const filteredList = getFilteredCards();
+
+            filteredList.forEach((card) => {
                 const isOwned = !!ownedCards[card.id];
-
-                // Application des filtres
-                if (activeRarityFilter !== 'all' && card.rarity !== activeRarityFilter) return;
-                if (activeSuitFilter !== 'all' && card.suit !== activeSuitFilter) return;
-                if (activeStatusFilter === 'owned' && !isOwned) return;
-                if (activeStatusFilter === 'missing' && isOwned) return;
-
                 const displayName = getCardDisplayName(card);
                 const colorCode = rarityColors[card.rarity] || '#475569';
 
                 const cardEl = document.createElement('div');
                 cardEl.className = `card-item ${isOwned ? 'owned' : ''}`;
                 cardEl.style.setProperty('--rarity-color', colorCode);
+                cardEl.setAttribute('data-rarity', card.rarity);
                 cardEl.onclick = () => toggleCard(card.id);
 
                 const imgPath = `${folder}${card.file}`;
@@ -788,6 +945,49 @@
             ownedCards[cardId] = !ownedCards[cardId];
             localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
             renderGrid();
+        }
+
+        function checkAllVisible(state) {
+            const visibleCards = getFilteredCards();
+            visibleCards.forEach(card => {
+                ownedCards[card.id] = state;
+            });
+            localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
+            renderGrid();
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ownedCards, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "collection_ahsarah.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            const t = i18n[currentLang] || i18n.fr;
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (typeof parsed === 'object' && parsed !== null) {
+                        ownedCards = parsed;
+                        localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
+                        renderGrid();
+                        alert(t.importSuccess);
+                    } else {
+                        alert(t.importError);
+                    }
+                } catch (err) {
+                    alert(t.importError);
+                }
+            };
+            reader.readAsText(file);
         }
 
         function setRarityFilter(rarity, btn) {
