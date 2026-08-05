@@ -12,6 +12,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent-blue: #38bdf8;
+            --card-min-width: 130px;
         }
 
         * {
@@ -234,6 +235,30 @@
             border-color: var(--accent-blue);
         }
 
+        /* Contour taille des cartes */
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            padding: 8px 14px;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .zoom-control label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .zoom-control input[type="range"] {
+            accent-color: var(--accent-blue);
+            cursor: pointer;
+            width: 120px;
+        }
+
         .btn-reset {
             margin-left: auto;
             background-color: #334155;
@@ -255,7 +280,7 @@
         /* --- GRILLE DE CARTES --- */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(var(--card-min-width), 1fr));
             gap: 16px;
             width: 100%;
             max-width: 1100px;
@@ -265,7 +290,7 @@
             background-color: var(--panel-bg);
             border: 2px solid var(--rarity-color, #475569);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
             user-select: none;
@@ -292,10 +317,10 @@
         }
 
         .card-img-wrapper {
-            width: 100px;
-            height: 140px;
+            width: 100%;
+            aspect-ratio: 100 / 140;
             border-radius: 6px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             background-color: rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
@@ -319,7 +344,7 @@
 
         .card-name {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
             color: #ffffff;
             white-space: nowrap;
             overflow: hidden;
@@ -327,7 +352,7 @@
         }
 
         .card-status {
-            font-size: 0.7rem;
+            font-size: clamp(0.6rem, 1vw, 0.7rem);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             opacity: 0.9;
@@ -414,8 +439,8 @@
             </div>
         </div>
 
-        <!-- Filtres par Statut & Reset -->
-        <div class="filter-group" style="flex-direction: row; align-items: center; flex-wrap: wrap;">
+        <!-- Filtres par Statut, Taille & Reset -->
+        <div class="filter-group" style="flex-direction: row; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
                 <div class="filter-label" style="margin-bottom: 8px;" id="txt-filter-status">Affichage :</div>
                 <div class="filter-buttons">
@@ -424,6 +449,16 @@
                     <button class="btn-filter" onclick="setStatusFilter('missing', this)" id="btn-status-missing">Manquantes</button>
                 </div>
             </div>
+
+            <!-- Contrôle de taille des cartes -->
+            <div>
+                <div class="filter-label" style="margin-bottom: 8px;" id="txt-size-label">Taille des cartes :</div>
+                <div class="zoom-control">
+                    <span>🔍</span>
+                    <input type="range" id="cardSizeSlider" min="90" max="200" value="130" oninput="updateCardSize(this.value)">
+                </div>
+            </div>
+
             <button class="btn-reset" onclick="resetCollection()" id="btn-reset">Réinitialiser la collection</button>
         </div>
     </div>
@@ -447,6 +482,7 @@
                 filterRarity: "Filtrer par rareté :",
                 filterType: "Filtrer par couleur / type :",
                 filterStatus: "Affichage :",
+                sizeLabel: "Taille des cartes :",
                 all: "Toutes",
                 rarityRed: "🔴 Ultime",
                 rarityOrange: "🟠 Légendaire",
@@ -479,6 +515,7 @@
                 filterRarity: "Filter by rarity:",
                 filterType: "Filter by suit / type:",
                 filterStatus: "Display:",
+                sizeLabel: "Card size:",
                 all: "All",
                 rarityRed: "🔴 Ultimate",
                 rarityOrange: "🟠 Legendary",
@@ -511,6 +548,7 @@
                 filterRarity: "按稀有度筛选:",
                 filterType: "按花色/类型筛选:",
                 filterStatus: "显示:",
+                sizeLabel: "卡牌大小:",
                 all: "全部",
                 rarityRed: "🔴 终极",
                 rarityOrange: "🟠 传说",
@@ -543,6 +581,7 @@
                 filterRarity: "Фильтр по редкости:",
                 filterType: "Фильтр по масти / типу:",
                 filterStatus: "Отображение:",
+                sizeLabel: "Размер карт:",
                 all: "Все",
                 rarityRed: "🔴 Абсолютная",
                 rarityOrange: "🟠 Легендарная",
@@ -661,6 +700,7 @@
             document.getElementById('btn-status-owned').textContent = t.statusOwned;
             document.getElementById('btn-status-missing').textContent = t.statusMissing;
 
+            document.getElementById('txt-size-label').textContent = t.sizeLabel;
             document.getElementById('btn-reset').textContent = t.reset;
         }
 
@@ -669,6 +709,17 @@
             localStorage.setItem('df_Ahsarah_lang', lang);
             applyLanguage();
             renderGrid();
+        }
+
+        function updateCardSize(val) {
+            document.documentElement.style.setProperty('--card-min-width', `${val}px`);
+            localStorage.setItem('df_card_size', val);
+        }
+
+        function loadCardSize() {
+            const savedSize = localStorage.getItem('df_card_size') || '130';
+            document.getElementById('cardSizeSlider').value = savedSize;
+            updateCardSize(savedSize);
         }
 
         function updateStats() {
@@ -771,6 +822,7 @@
 
         // Initialisation
         applyLanguage();
+        loadCardSize();
         renderGrid();
     </script>
 </body>
