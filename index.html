@@ -31,7 +31,7 @@
             min-height: 100vh;
         }
 
-        /* --- EN-TÊTE REVISEE --- */
+        /* --- EN-TÊTE --- */
         .header-container {
             width: 100%;
             max-width: 1100px;
@@ -72,7 +72,7 @@
             gap: 10px;
         }
 
-        /* Bouton Don PayPal Premium */
+        /* Bouton Don PayPal */
         .btn-paypal {
             background: linear-gradient(135deg, #0070ba, #00457c);
             color: #ffffff;
@@ -352,6 +352,31 @@
             box-shadow: 0 4px 12px var(--rarity-color, rgba(255, 255, 255, 0.2));
         }
 
+        /* EFFET HOLO SUR RARETES ULTIME ET LEGENDAIRE */
+        .card-item[data-rarity="red"]:hover::after,
+        .card-item[data-rarity="orange"]:hover::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255, 255, 255, 0.22) 50%,
+                transparent 60%
+            );
+            transform: rotate(25deg);
+            animation: holoShine 1.2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes holoShine {
+            0% { transform: translateY(-100%) rotate(25deg); }
+            100% { transform: translateY(100%) rotate(25deg); }
+        }
+
         .card-item.owned { opacity: 0.35; }
         .card-item.owned:hover { opacity: 0.75; }
 
@@ -448,11 +473,11 @@
                     <span class="filter-label" id="txt-filter-rarity">Rareté :</span>
                     <div class="filter-buttons">
                         <button class="btn-filter active" onclick="setRarityFilter('all', this)" id="btn-rarity-all">Toutes</button>
-                        <button class="btn-filter" onclick="setRarityFilter('red', this)">🔴 Ultime</button>
-                        <button class="btn-filter" onclick="setRarityFilter('orange', this)">🟠 Légendaire</button>
-                        <button class="btn-filter" onclick="setRarityFilter('purple', this)">🟣 Épique</button>
-                        <button class="btn-filter" onclick="setRarityFilter('blue', this)">🔵 Rare</button>
-                        <button class="btn-filter" onclick="setRarityFilter('green', this)">🟢 Inhabituel</button>
+                        <button class="btn-filter" onclick="setRarityFilter('red', this)" id="btn-rarity-red">🔴 Ultime</button>
+                        <button class="btn-filter" onclick="setRarityFilter('orange', this)" id="btn-rarity-orange">🟠 Légendaire</button>
+                        <button class="btn-filter" onclick="setRarityFilter('purple', this)" id="btn-rarity-purple">🟣 Épique</button>
+                        <button class="btn-filter" onclick="setRarityFilter('blue', this)" id="btn-rarity-blue">🔵 Rare</button>
+                        <button class="btn-filter" onclick="setRarityFilter('green', this)" id="btn-rarity-green">🟢 Inhabituel</button>
                     </div>
                 </div>
 
@@ -490,8 +515,6 @@
                 </div>
 
                 <div style="display: flex; gap: 4px;">
-                    <button class="btn-action" onclick="checkAllVisible(true)" title="Tout cocher" id="btn-check-all">✓ Tout</button>
-                    <button class="btn-action" onclick="checkAllVisible(false)" title="Tout décocher" id="btn-uncheck-all">✗ Aucun</button>
                     <button class="btn-action" onclick="exportJSON()" title="Exporter" id="btn-export">📥 Exporter</button>
                     <button class="btn-action" onclick="document.getElementById('importFile').click()" title="Importer" id="btn-import">📤 Importer</button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importJSON(event)">
@@ -513,7 +536,7 @@
     <script>
         const folder = "./Cards/";
 
-        // TRADUCTIONS COMPLETES RESTAUREES
+        // TRADUCTIONS COMPLETES (AVEC RARETES)
         const i18n = {
             fr: {
                 title: "Cartes Ahsarah",
@@ -533,6 +556,11 @@
                 sortName: "Nom (A-Z)",
                 sortValue: "Valeur",
                 all: "Toutes",
+                rarityRed: "🔴 Ultime",
+                rarityOrange: "🟠 Légendaire",
+                rarityPurple: "🟣 Épique",
+                rarityBlue: "🔵 Rare",
+                rarityGreen: "🟢 Inhabituel",
                 spade: "♠ Pique",
                 heart: "♥ Cœur",
                 club: "♣ Trèfle",
@@ -540,8 +568,6 @@
                 special: "★ Spéciales",
                 statusOwned: "Possédées",
                 statusMissing: "Manquantes",
-                checkAll: "✓ Tout",
-                uncheckAll: "✗ Aucun",
                 exportBtn: "📥 Exporter",
                 importBtn: "📤 Importer",
                 reset: "Réinitialiser",
@@ -574,6 +600,11 @@
                 sortName: "Name (A-Z)",
                 sortValue: "Value",
                 all: "All",
+                rarityRed: "🔴 Ultimate",
+                rarityOrange: "🟠 Legendary",
+                rarityPurple: "🟣 Epic",
+                rarityBlue: "🔵 Rare",
+                rarityGreen: "🟢 Uncommon",
                 spade: "♠ Spades",
                 heart: "♥ Hearts",
                 club: "♣ Clubs",
@@ -581,8 +612,6 @@
                 special: "★ Specials",
                 statusOwned: "Collected",
                 statusMissing: "Missing",
-                checkAll: "✓ All",
-                uncheckAll: "✗ None",
                 exportBtn: "📥 Export",
                 importBtn: "📤 Import",
                 reset: "Reset",
@@ -615,6 +644,11 @@
                 sortName: "名称 (A-Z)",
                 sortValue: "数值",
                 all: "全部",
+                rarityRed: "🔴 终极",
+                rarityOrange: "🟠 传说",
+                rarityPurple: "🟣 史诗",
+                rarityBlue: "🔵 稀有",
+                rarityGreen: "🟢 优秀",
                 spade: "♠ 黑桃",
                 heart: "♥ 红桃",
                 club: "♣ 梅花",
@@ -622,8 +656,6 @@
                 special: "★ 特殊",
                 statusOwned: "已收集",
                 statusMissing: "未收集",
-                checkAll: "✓ 全选",
-                uncheckAll: "✗ 取消全选",
                 exportBtn: "📥 导出",
                 importBtn: "📤 导入",
                 reset: "重置",
@@ -656,6 +688,11 @@
                 sortName: "Имя (А-Я)",
                 sortValue: "Значение",
                 all: "Все",
+                rarityRed: "🔴 Абсолютная",
+                rarityOrange: "🟠 Легендарная",
+                rarityPurple: "🟣 Эпическая",
+                rarityBlue: "🔵 Редкая",
+                rarityGreen: "🟢 Необычная",
                 spade: "♠ Пики",
                 heart: "♥ Черви",
                 club: "♣ Трефы",
@@ -663,8 +700,6 @@
                 special: "★ Особые",
                 statusOwned: "Собрано",
                 statusMissing: "Отсутствует",
-                checkAll: "✓ Все",
-                uncheckAll: "✗ Ничего",
                 exportBtn: "📥 Экспорт",
                 importBtn: "📤 Импорт",
                 reset: "Сброс",
@@ -745,6 +780,11 @@
 
             document.getElementById('txt-filter-rarity').textContent = t.filterRarity;
             document.getElementById('btn-rarity-all').textContent = t.all;
+            document.getElementById('btn-rarity-red').textContent = t.rarityRed;
+            document.getElementById('btn-rarity-orange').textContent = t.rarityOrange;
+            document.getElementById('btn-rarity-purple').textContent = t.rarityPurple;
+            document.getElementById('btn-rarity-blue').textContent = t.rarityBlue;
+            document.getElementById('btn-rarity-green').textContent = t.rarityGreen;
 
             document.getElementById('txt-filter-type').textContent = t.filterType;
             document.getElementById('btn-suit-all').textContent = t.all;
@@ -765,8 +805,6 @@
             document.getElementById('opt-sort-name').textContent = t.sortName;
             document.getElementById('opt-sort-value').textContent = t.sortValue;
 
-            document.getElementById('btn-check-all').textContent = t.checkAll;
-            document.getElementById('btn-uncheck-all').textContent = t.uncheckAll;
             document.getElementById('btn-export').textContent = t.exportBtn;
             document.getElementById('btn-import').textContent = t.importBtn;
             document.getElementById('btn-reset').textContent = t.reset;
@@ -843,6 +881,7 @@
                 const cardEl = document.createElement('div');
                 cardEl.className = `card-item ${isOwned ? 'owned' : ''}`;
                 cardEl.style.setProperty('--rarity-color', colorCode);
+                cardEl.setAttribute('data-rarity', card.rarity);
                 cardEl.onclick = () => toggleCard(card.id);
 
                 const imgPath = `${folder}${card.file}`;
@@ -867,12 +906,6 @@
 
         function toggleCard(cardId) {
             ownedCards[cardId] = !ownedCards[cardId];
-            localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
-            renderGrid();
-        }
-
-        function checkAllVisible(state) {
-            getFilteredCards().forEach(card => ownedCards[card.id] = state);
             localStorage.setItem('df_Ahsarah_cards_local', JSON.stringify(ownedCards));
             renderGrid();
         }
